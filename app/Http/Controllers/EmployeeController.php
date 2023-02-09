@@ -12,15 +12,17 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employee = Employee::paginate(10);
-        return response()->json([
-            'data' =>$employee
-        ]);
+        $keyword = $request->keyword;
+         return Employee::with('employee')->where('first_name', 'LIKE', '%'.$keyword.'%')
+                                          ->orWhere('last_name', 'LIKE', '%'.$keyword.'%' )
+                                          ->orWhere('gender', 'LIKE', '%'.$keyword.'%')
+                                          ->paginate(5);
     }
 
-   
+    // $keyword = $request->keyword;
+    // return Employee::where("first_name", "LIKE", "%$keyword%")->get();
 
     /**
      * Store a newly created resource in storage.
@@ -84,8 +86,24 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         $employee->delete();
-        return response()->json ([
-            'message' => 'employee deleted'
-        ], 204);
+        return 204;
     }
+
+    public function list (Request $request){
+        $employee_query=Employee::with(['first_name', 'last_name']);
+        if($request->keyword){
+            $employee_query->where('first_name', 'LIKE', '%' .$request->keyword. '%');
+        }
+        if($request->last_name){
+            $employee_query->whereHas('last_name', function($query)use($request){
+                $query->where('slug',$request->last_name);
+            });
+        }
+
+        $employees=$employee_query->get();
+        return response ()->json ([
+            'massage' => 'Employee successfully created',
+            'data'=>$employees
+         ],200);
+}
 }
