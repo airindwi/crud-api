@@ -17,4 +17,8 @@ class Employee extends Model
         'hire_date',
         'birth_date'
     ];
+
+    public function employee(){
+        return $this->belongsTo(Employee::class);
+   }
 }
