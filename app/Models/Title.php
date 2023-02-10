@@ -8,5 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Title extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+     protected $fillable = [
+        'emp_no',
+        'title',
+        'from_date',
+        'to_date'
+    ];
+
+    public function title(){
+        return $this->belongsTo(Title::class);
+   }
 }
