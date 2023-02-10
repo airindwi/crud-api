@@ -14,12 +14,24 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $keyword = $request->keyword;
-         return Employee::with('employee')->where('first_name', 'LIKE', '%'.$keyword.'%')
-                                          ->orWhere('last_name', 'LIKE', '%'.$keyword.'%' )
-                                          ->orWhere('gender', 'LIKE', '%'.$keyword.'%')
-                                          ->paginate(5);
+        $employees = Employee::with('employee');
+
+        if ($request->has('last_name')) {
+            $employees->where('last_name', $request->last_name);
+        }
+
+        if ($request->has('first_name')) {
+            $employees->where('first_name', $request->first_name);
+        }
+
+        if ($request->has('gender')) {
+            $employees->where('gender', $request->gender);
+        }
+
+        return $employees->get();
     }
+       
+    
 
     // $keyword = $request->keyword;
     // return Employee::where("first_name", "LIKE", "%$keyword%")->get();
@@ -89,21 +101,5 @@ class EmployeeController extends Controller
         return 204;
     }
 
-    public function list (Request $request){
-        $employee_query=Employee::with(['first_name', 'last_name']);
-        if($request->keyword){
-            $employee_query->where('first_name', 'LIKE', '%' .$request->keyword. '%');
-        }
-        if($request->last_name){
-            $employee_query->whereHas('last_name', function($query)use($request){
-                $query->where('slug',$request->last_name);
-            });
-        }
-
-        $employees=$employee_query->get();
-        return response ()->json ([
-            'massage' => 'Employee successfully created',
-            'data'=>$employees
-         ],200);
-}
+   
 }
