@@ -12,13 +12,12 @@ class SalaryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $salaries = Salary::paginate(10);
-        return response()->json([
-            'data' => $salaries
-        ]);
+        $salary = $request->salary;
+        return Salary::where("salary", "LIKE", "%$salary%")->get();
     }
+    
 
     /**
      * Show the form for creating a new resource.
