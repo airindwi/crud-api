@@ -8,5 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Salary extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+   protected $fillable = [
+        'emp_no',
+        'salary',
+        'from_date',
+        'to_date'
+    ];
+
+    public function salary(){
+        return $this->belongsTo(Salary::class);
+   }
 }
