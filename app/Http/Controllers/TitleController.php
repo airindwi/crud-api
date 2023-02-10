@@ -12,12 +12,10 @@ class TitleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $titles = Title::paginate(10);
-        return response()->json([
-            'data' => $titles
-        ]);
+        $title = $request->title;
+        return Title::where("title", "LIKE", "%$title%")->get();
     }
 
     /**
