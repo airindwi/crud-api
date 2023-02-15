@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TitleController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\SalaryController;
-
-
+use App\Http\Controllers\api\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,11 +16,11 @@ use App\Http\Controllers\SalaryController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::apiResource('titles', TitleController::class);
-Route::apiResource('employees', EmployeeController::class);
-Route::apiResource('salaries', SalaryController::class);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('employees', EmployeeController::class);
+    });
+// Route::apiResource('titles', TitleController::class);
+// Route::apiResource('employees', EmployeeController::class);
+// Route::apiResource('salaries', SalaryController::class);
